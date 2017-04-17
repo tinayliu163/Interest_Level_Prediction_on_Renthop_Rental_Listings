@@ -24,20 +24,22 @@ test_df['latitude'] = round(test_df['latitude'], 2)
 test_df['longitude'] = round(test_df['longitude'], 2)
 test_df['latlong'] = test_df.latitude.map(str) + ', ' + test_df.longitude.map(str)
 
-'''l = train_df['latlong'].unique()
+'''l = pd.concat([train_df['latlong'], test_df['latlong']]).unique()
 ll = pd.DataFrame(l)
-print(len(l))
+#print(len(l))
+
 l1.to_csv('C:/Users/tingt/PycharmProjects/BIA656/Final/neighborhood.csv')
+
 geolocator = Nominatim()
-location = geolocator.reverse(train_df.iloc[0]['latlong'])
-location = geolocator.reverse(l[153])
-print(location.raw['address'])
+#location = geolocator.reverse(train_df.iloc[484]['latlong'])
+location = geolocator.reverse(l[485])
+print(location.raw['address')
 
-for i in range(460):
+for i in range(581):
     location = geolocator.reverse(l[i])
-    print(location.raw['address']['postcode'])'''
-
-zipcode = pd.read_csv("C:/Users/tingt/PycharmProjects/BIA656/Final/neighborhood.csv")
+    print(location.raw['address']['postcode'])
+'''
+zipcode = pd.read_csv("C:/Users/tingt/PycharmProjects/BIA656/Final/neighborhood_new.csv")
 #print(zipcode.head())
 
 #Join zipcode and train_df dataframes and create dummy variables
@@ -53,11 +55,11 @@ test_df['number_photos'] = [len(test_df.iloc[i]['photos']) for i in range(len(te
 #print(train_zip.tail())
 
 #Create dummy variables for building and manager id
-b_id = train_df['building_id'].unique()
+b_id = pd.concat([train_df['building_id'], test_df['building_id']]).unique()
 b_id = pd.DataFrame(b_id)
 b_id.columns = ['building_id']
 b_id['building_index'] = [i for i in range(len(b_id))]
-m_id = train_df['manager_id'].unique()
+m_id = pd.concat([train_df['manager_id'], test_df['manager_id']]).unique()
 m_id = pd.DataFrame(m_id)
 m_id.columns = ['manager_id']
 m_id['manager_index'] = [i for i in range(len(m_id))]
@@ -111,5 +113,15 @@ for name in facilities:
     test_df = newColumn(name, test_df, test_df['features'])
 #print(train_df.head())
 #print(test_df.head())
+
+#Separate created column by day, month, year
+train_df["created"] = pd.to_datetime(train_df["created"])
+train_df["created_year"] = train_df["created"].dt.year
+train_df["created_month"] = train_df["created"].dt.month
+train_df["created_day"] = train_df["created"].dt.day
+test_df["created"] = pd.to_datetime(test_df["created"])
+test_df["created_year"] = test_df["created"].dt.year
+test_df["created_month"] = test_df["created"].dt.month
+test_df["created_day"] = test_df["created"].dt.day
 
 
