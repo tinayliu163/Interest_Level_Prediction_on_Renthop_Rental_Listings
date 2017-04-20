@@ -176,14 +176,6 @@ y_val_pred_acc3 = rf3.predict(X_val)
 print(log_loss(y_val, y_val_pred3))
 print(accuracy_score(y_val, y_val_pred_acc3))
 
-#Bagging
-from sklearn.ensemble import BaggingClassifier
-rf3 = BaggingClassifier()
-rf3.fit(X_train, y_train)
-y_val_pred3 = rf3.predict_proba(X_val)
-y_val_pred_acc3 = rf3.predict(X_val)
-print(log_loss(y_val, y_val_pred3))
-print(accuracy_score(y_val, y_val_pred_acc3))
 
 
 #Naive Bayes
@@ -195,10 +187,18 @@ y_val_pred_acc4 = rf4.predict(X_val)
 print(log_loss(y_val, y_val_pred4))
 print(accuracy_score(y_val, y_val_pred_acc4))
 
+#Bagging
+from sklearn.ensemble import BaggingClassifier
+rf5 = BaggingClassifier()
+rf5.fit(X_train, y_train)
+y_val_pred5 = rf5.predict_proba(X_val)
+y_val_pred_acc5 = rf5.predict(X_val)
+print(log_loss(y_val, y_val_pred5))
+print(accuracy_score(y_val, y_val_pred_acc5))
 
 #KNN
-
-
+from sklearn.neighbors import KNeighborsClassifier
+rf5=KNeighborsClassifier()
 
 
 
