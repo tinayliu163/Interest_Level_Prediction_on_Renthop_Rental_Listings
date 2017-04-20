@@ -163,7 +163,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import log_loss
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import roc_auc_score
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, VotingClassifier
+from sklearn.ensemble import RandomForestClassifier
 random_state = 5000
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.34, random_state = 5000)
 rf1 = RandomForestClassifier(n_estimators=250, criterion='entropy',  n_jobs = 1,  random_state=random_state)
