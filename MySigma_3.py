@@ -62,6 +62,12 @@ train_df["created_year"] = train_df["created"].dt.year
 train_df["created_month"] = train_df["created"].dt.month
 train_df["created_day"] = train_df["created"].dt.day
 train_df["num_photos"] = train_df["photos"].apply(len)
+#test_df
+test_df["created"] = pd.to_datetime(test_df["created"])
+test_df["created_year"] = test_df["created"].dt.year
+test_df["created_month"] = test_df["created"].dt.month
+test_df["created_day"] = test_df["created"].dt.day
+test_df["num_photos"] = test_df["photos"].apply(len)
 
 #Create new attributes from price
 train_df['price'] = train_df['price'].clip(upper=13000)
@@ -69,6 +75,13 @@ train_df["logprice"] = np.log(train_df["price"])
 train_df["price_t"] =train_df["price"]/train_df["bedrooms"]
 train_df["room_sum"] = train_df["bedrooms"]+train_df["bathrooms"]
 train_df['price_per_room'] = train_df['price']/train_df['room_sum']
+#Test dataset
+test_df['price'] = test_df['price'].clip(upper=13000)
+test_df["logprice"] = np.log(test_df["price"])
+test_df["price_t"] =test_df["price"]/test_df["bedrooms"]
+test_df["room_sum"] = test_df["bedrooms"]+test_df["bathrooms"]
+test_df['price_per_room'] = test_df['price']/test_df['room_sum']
+
 
 
 #Concatenate latitude and longitude into one column
