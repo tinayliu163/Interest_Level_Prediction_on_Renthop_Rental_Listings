@@ -12,15 +12,15 @@ train_df.describe()
 test_df.describe()
 
 #Take out outliers for bedrooms, bathrooms, price
-print(train_df.bathrooms.unique())
-print(test_df.bathrooms.unique())
-print(train_df.bedrooms.unique())
-print(test_df.bedrooms.unique())
+#print(train_df.bathrooms.unique())
+#print(test_df.bathrooms.unique())
+#print(train_df.bedrooms.unique())
+#print(test_df.bedrooms.unique())
 
-test_df["bathrooms"].loc[19671] = 1.5
-test_df["bathrooms"].loc[22977] = 2.0
-test_df["bathrooms"].loc[63719] = 2.0
-train_df["price"] = train_df["price"].clip(upper=13000)
+#test_df["bathrooms"].loc[19671] = 1.5
+#test_df["bathrooms"].loc[22977] = 2.0
+#test_df["bathrooms"].loc[63719] = 2.0
+#train_df["price"] = train_df["price"].clip(upper=13000)
 
 
 #See the frequency of each feature and rank them based on frequency
@@ -48,9 +48,11 @@ def newColumn(name, df, series):
 
 
 #Select features based on frequency
-facilities = ['Elevator','Cats Allowed','Hardwood Floors','Dogs Allowed','Doorman','Dishwasher','No Fee','Laundry in Building','Fitness Center']
+facilities = ['Elevator','Cats Allowed','Hardwood Floors','Dogs Allowed','Doorman','Dishwasher','No Fee','Laundry in Building','Fitness Center'
+             'Pre-War', 'Laundry in Unit', 'Roof Deck', 'Outdoor Space', 'Dining Room', 'High Speed Internet', 'Balcony', 'Swimming Pool']
 for name in facilities:
     train_df = newColumn(name, train_df, train_df['features'])
+    test_df = newColumn(name, test_df, test_df['features'])
 #print(train_df.head()
 
 
@@ -134,6 +136,7 @@ test_df = pd.merge(test_df, m_id, how = 'left', on=['manager_id'])
 features_to_use = ["bathrooms", "bedrooms", "price",
              "num_photos", "Elevator", "Dogs Allowed",'Hardwood Floors','Cats Allowed',
              'Dishwasher','Doorman', 'No Fee','Laundry in Building','Fitness Center',
+             'Pre-War', 'Laundry in Unit', 'Roof Deck', 'Outdoor Space', 'Dining Room', 'High Speed Internet', 'Balcony', 'Swimming Pool',
              "created_year", "created_month", "created_day",'building_index', 'manager_index', 'zip_id'
              ]
 
