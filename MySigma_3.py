@@ -202,16 +202,20 @@ print(accuracy_score(y_val, y_val_pred_acc5))
 #KNN
 from sklearn.neighbors import KNeighborsClassifier
 rf6 =KNeighborsClassifier()
-rf6 = BaggingClassifier()
 rf6.fit(X_train, y_train)
 y_val_pred6 = rf6.predict_proba(X_val)
 y_val_pred_acc6 = rf6.predict(X_val)
 print(log_loss(y_val, y_val_pred6))
 print(accuracy_score(y_val, y_val_pred_acc6))
 
-
-
-
+#AdaBoost
+from sklearn.ensemble import AdaBoostClassifier
+rf7 = AdaBoostClassifier(n_estimators=250)
+rf7.fit(X_train, y_train)
+y_val_pred6 = rf7.predict_proba(X_val)
+y_val_pred_acc7 = rf7.predict(X_val)
+print(log_loss(y_val, y_val_pred7))
+print(accuracy_score(y_val, y_val_pred_acc7))
 
 
 #Using test dataset for submission
