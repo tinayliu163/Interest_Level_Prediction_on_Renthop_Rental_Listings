@@ -218,6 +218,23 @@ print(log_loss(y_val, y_val_pred7))
 print(accuracy_score(y_val, y_val_pred_acc7))
 
 
+#Compare ROC of each Algorithm
+#RandomForest
+fpr1, tpr1, threshold1 = metrics.roc_curve(y_val_pred_acc1, y_val_pred1)
+roc_auc1 = metrics.auc(fpr1, tpr1)
+plt.title('ROC of RandomForest')
+plt.plot(fpr1, tpr1, 'b', label = 'AUC = %0.2f' % roc_auc1)
+plt.legend(loc = 'lower right')
+plt.plot([0, 1], [0, 1],'r--')
+plt.xlim([0, 1])
+plt.ylim([0, 1])
+plt.ylabel('True Positive Rate')
+plt.xlabel('False Positive Rate')
+plt.show()
+
+
+
+
 #Using test dataset for submission
 X_test = test_df[features_to_use]
 y_test = rf1.predict_proba(X_test)
