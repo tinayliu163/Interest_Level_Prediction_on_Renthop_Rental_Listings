@@ -200,6 +200,22 @@ print(accuracy_score(y_val, y_val_pred_acc4))
 
 
 
+
+
+
+
+
+#Using test dataset for submission
+X_test = test_df[features_to_use]
+y_test = rf1.predict_proba(X_test)
+target_num_map = {'high':0, 'medium':1, 'low':2}
+sub = pd.DataFrame()
+sub["listing_id"] = test_df["listing_id"]
+for label in ["high", "medium", "low"]:
+    sub[label] = y_test[:, target_num_map[label]]
+sub.to_csv("submission.csv", index=False)
+
+
 '''#SVM
 from sklearn.svm import SVC
 rf2 = SVC()
