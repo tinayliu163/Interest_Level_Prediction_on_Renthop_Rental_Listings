@@ -167,6 +167,14 @@ y_val_pred_acc2 = rf2.predict(X_val)
 print(log_loss(y_val, y_val_pred2))
 print(accuracy_score(y_val, y_val_pred_acc2))
 
+#Decision tree
+from sklearn.tree import DecisionTreeClassifier
+rf3 = DecisionTreeClassifier()
+rf3.fit(X_train, y_train)
+y_val_pred3 = rf3.predict_proba(X_val)
+y_val_pred_acc3 = rf3.predict(X_val)
+print(log_loss(y_val, y_val_pred3))
+print(accuracy_score(y_val, y_val_pred_acc3))
 
 #Bagging
 from sklearn.ensemble import BaggingClassifier
@@ -188,6 +196,10 @@ print(log_loss(y_val, y_val_pred4))
 print(accuracy_score(y_val, y_val_pred_acc4))
 
 
+#KNN
+
+
+
 '''#SVM
 from sklearn.svm import SVC
 rf2 = SVC()
@@ -201,14 +213,7 @@ print(log_loss(y_val, y_val_pred2))
 print(accuracy_score(y_val, y_val_pred_acc2))
 
 
-#Decision tree
-from sklearn.tree import DecisionTreeClassifier
-rf3 = DecisionTreeClassifier()
-rf3.fit(X_train, y_train)
-y_val_pred3 = rf3.predict_proba(X_val)
-y_val_pred_acc3 = rf3.predict(X_val)
-print(log_loss(y_val, y_val_pred3))
-print(accuracy_score(y_val, y_val_pred_acc3))
+
 
 '''
 
