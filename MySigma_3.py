@@ -219,6 +219,8 @@ print(accuracy_score(y_val, y_val_pred_acc7))
 
 
 #Compare ROC of each Algorithm
+import matplotlib.pyplot as plt
+from sklearn import metrics
 #RandomForest
 fpr1, tpr1, threshold1 = metrics.roc_curve(y_val_pred_acc1, y_val_pred1)
 roc_auc1 = metrics.auc(fpr1, tpr1)
