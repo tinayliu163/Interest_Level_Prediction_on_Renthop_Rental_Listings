@@ -275,7 +275,7 @@ plt.figure(figsize=(8,5))
 ax = logloss_series.plot(kind='bar',color = '#00e68a')
 ax.set_title("Logloss Evaluation")
 ax.set_xlabel("Methods")
-ax.set_ylabel("Accuracy score")
+ax.set_ylabel("Logloss")
 ax.set_xticklabels(x_labels2)
 plt.show()
 
