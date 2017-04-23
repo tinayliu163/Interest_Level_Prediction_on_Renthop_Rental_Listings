@@ -248,6 +248,8 @@ print(logloss7)
 accuracy7 = accuracy_score(y_val, y_val_pred_acc7)
 print(accuracy7)
 
+
+#Compare different Algorithms
 import matplotlib.pyplot as plt
 accuracy_list = [accuracy, accuracy2, accuracy3, accuracy4, accuracy5
                  ,accuracy6,accuracy7]
@@ -266,11 +268,11 @@ plt.show()
 import matplotlib.pyplot as plt
 logloss_list = [logloss, logloss2, logloss2, logloss3, logloss4
                  ,logloss6 ,logloss7]
-accuracy_series = pd.Series.from_array(logloss_list)
+logloss_series = pd.Series.from_array(logloss_list)
 x_labels2 = ['RandomForest', 'LogisticRegression', 'Decision tree','Naive Bayes', 
             'Bagging', 'KNN','AdaBoost']
 plt.figure(figsize=(8,5))
-ax = accuracy_series.plot(kind='bar',color = '#00e68a')
+ax = logloss_series.plot(kind='bar',color = '#00e68a')
 ax.set_title("Logloss Evaluation")
 ax.set_xlabel("Methods")
 ax.set_ylabel("Accuracy score")
