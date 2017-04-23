@@ -261,6 +261,7 @@ ax = accuracy_series.plot(kind='bar',color = '#ccccff')
 ax.set_title("Accuracy Evaluation")
 ax.set_xlabel("Methods")
 ax.set_ylabel("Accuracy score")
+ax.set_ylim([0.5,0.8])
 ax.set_xticklabels(x_labels)
 plt.show()
 
@@ -272,10 +273,11 @@ logloss_series = pd.Series.from_array(logloss_list)
 x_labels2 = ['RandomForest', 'LogisticRegression', 'Decision tree','Naive Bayes', 
             'Bagging', 'KNN','AdaBoost']
 plt.figure(figsize=(8,5))
-ax = logloss_series.plot(kind='bar',color = '#00e68a')
+ax = logloss_series.plot(kind='bar',color = '#ffb3b3')
 ax.set_title("Logloss Evaluation")
 ax.set_xlabel("Methods")
 ax.set_ylabel("Logloss")
+ax.set_ylim([0,2])
 ax.set_xticklabels(x_labels2)
 plt.show()
 
