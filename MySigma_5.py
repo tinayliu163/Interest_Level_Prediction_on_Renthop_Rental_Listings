@@ -19,15 +19,17 @@ train_df.describe()
 test_df.describe()
 
 #Take out outliers for bedrooms, bathrooms, price
-#print(train_df.bathrooms.unique())
-#print(test_df.bathrooms.unique())
-#print(train_df.bedrooms.unique())
-#print(test_df.bedrooms.unique())
-
-#test_df["bathrooms"].loc[19671] = 1.5
-#test_df["bathrooms"].loc[22977] = 2.0
-#test_df["bathrooms"].loc[63719] = 2.0
-#train_df["price"] = train_df["price"].clip(upper=13000)
+#print(train_df.bathrooms.value_counts())
+#print(test_df.bathrooms.value_counts())
+#print(train_df.bedrooms.value_counts())
+#print(test_df.bedrooms.value_counts())
+#print(train_df.price.value_counts().sort_index())
+#print(test_df.price.value_counts().sort_index
+#bath_out = [item for item in range(len(test_df['bathrooms'])) if test_df.iloc[item]['bathrooms'] >19]
+#print(bath_out)
+test_df["bathrooms"].loc[19671] = 1.5
+test_df["bathrooms"].loc[22977] = 2.0
+test_df["bathrooms"].loc[63719] = 2.0
 
 
 #See the frequency of each feature and rank them based on frequency
@@ -299,3 +301,31 @@ sub["listing_id"] = test_df["listing_id"]
 for label in ["high", "medium", "low"]:
     sub[label] = y_test[:, target_num_map[label]]
 sub.to_csv("submission.csv", index=False)
+
+#Feature Selection
+import matplotlib.pyplot as plt
+from sklearn.ensemble import ExtraTreesClassifier
+
+# Build a forest and compute the feature importances
+#http://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_importances.html
+forest = ExtraTreesClassifier(n_estimators=29,
+                              random_state=0)
+forest.fit(X, y)
+importances = forest.feature_importances_
+std = np.std([tree.feature_importances_ for tree in forest.estimators_],
+             axis=0)
+indices = np.argsort(importances)[::-1]
+# Print the feature ranking
+print("Feature ranking:")
+for f in range(X.shape[1]):
+    print("%d. %s (%f)" % (f + 1, X.columns[indices[f]], importances[indices[f]]))
+# Plot the feature importances of the forest
+plt.title("Feature Importance", size = 30)
+plt.bar(range(X.shape[1]), importances[indices],
+       color="r", yerr=std[indices], align="center")
+plt.xticks(range(X.shape[1]), X.columns[indices], size = 16)
+plt.xlim([-1, X.shape[1]])
+locs, labels = plt.xticks()
+plt.setp(labels, rotation=90)
+plt.show()
+
