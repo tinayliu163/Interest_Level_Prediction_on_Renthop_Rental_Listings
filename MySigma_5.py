@@ -284,7 +284,13 @@ ax.set_xticklabels(x_labels2)
 plt.show()
 
 
+from sklearn.metrics import confusion_matrix
+#RF
+confusion_matrix(y_val, y_val_pred_acc)
 
+from sklearn.metrics import classification_report
+#RF
+print(classification_report(y_val, y_val_pred_acc))
 
 
 
