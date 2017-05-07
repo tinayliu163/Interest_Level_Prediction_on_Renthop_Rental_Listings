@@ -313,7 +313,6 @@ import matplotlib.pyplot as plt
 from sklearn.ensemble import ExtraTreesClassifier
 
 # Build a forest and compute the feature importances
-#http://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_importances.html
 forest = ExtraTreesClassifier(n_estimators=29,
                               random_state=0)
 forest.fit(X, y)
