@@ -7,16 +7,66 @@ Created on Wed March 15 16:35:38 2017
 
 import numpy as np
 import pandas as pd
-
+import re
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import euclidean_distances
 
 #Import train and test json files as dataframes
 train_df  = pd.read_json(open("train.json", "r"))
 test_df = pd.read_json(open("test.json", "r"))
 #print(train_df.tail())
 
-#Data Exploration
+#Exploratory data analysis
 train_df.describe()
 test_df.describe()
+
+# target variable exploration
+# Interest_level
+labels = ["low","medium","high"]
+sizes = train.interest_level.value_counts().values
+explode=[0.1,0,0]
+colors = ['lightcoral','gold','lightblue']
+patches, texts,autotexts= plt.pie(sizes, labels=labels,colors=colors,explode=explode,autopct="%1.1f%%",
+                        startangle=90)
+plt.title("Interest Level")
+plt.show()
+
+# map : interest_level
+### Seaborn style
+sns.set_style("whitegrid")
+
+# Rent interest graph of New-York
+sns.lmplot(x="longitude", y="latitude", fit_reg=False, hue='interest_level',
+           hue_order=['low', 'medium', 'high'], size=9, scatter_kws={'alpha':0.4,'s':30},
+           data=house_data[(house_data.longitude>house_data.longitude.quantile(0.005))
+                           &(house_data.longitude<house_data.longitude.quantile(0.995))
+                           &(house_data.latitude>house_data.latitude.quantile(0.005))                           
+                           &(house_data.latitude<house_data.latitude.quantile(0.995))]);
+plt.xlabel('Longitude');
+plt.ylabel('Latitude');
+
+# Price exploration
+fig = plt.figure(figsize=(12,12))
+
+# Price distribution
+sns.distplot(house_data.price[house_data.price<=house_data.price.quantile(0.99)], ax=plt.subplot(211));
+plt.xlabel('Price');
+plt.ylabel('Density');
+
+# Average Price per Interest Level
+sns.barplot(x="interest_level", y="price", order=['low', 'medium', 'high'],
+            data=house_data, ax=plt.subplot(223));
+plt.xlabel('Interest Level');
+plt.ylabel('Price');
+
+# Violinplot of price for every Interest Level
+sns.violinplot(x="interest_level", y="price", order=['low', 'medium', 'high'],
+               data=house_data[house_data.price<=house_data.price.quantile(0.99)],
+               ax=plt.subplot(224));
+plt.xlabel('Interest Level');
+plt.ylabel('Price');     
 
 #Take out outliers for bedrooms, bathrooms, price
 #print(train_df.bathrooms.value_counts())
@@ -27,6 +77,9 @@ test_df.describe()
 #print(test_df.price.value_counts().sort_index
 #bath_out = [item for item in range(len(test_df['bathrooms'])) if test_df.iloc[item]['bathrooms'] >19]
 #print(bath_out)
+
+# Data Preparation
+
 test_df["bathrooms"].loc[19671] = 1.5
 test_df["bathrooms"].loc[22977] = 2.0
 test_df["bathrooms"].loc[63719] = 2.0
@@ -42,7 +95,6 @@ def most_common(lst):
     df = pd.DataFrame.from_items(data)
     return df.sort_values(by = 'frequency', ascending = False)
 
-
 #Function to make a new column for features
 def newColumn(name, df, series):
     feature = pd.Series(0, df.index, name = name)
@@ -52,7 +104,6 @@ def newColumn(name, df, series):
     df[name] = feature
     return df
 
-
 #Select features based on frequency
 facilities = ['Elevator','Cats Allowed','Hardwood Floors','Dogs Allowed','Doorman','Dishwasher','No Fee','Laundry in Building','Fitness Center',
              'Pre-War', 'Laundry in Unit', 'Roof Deck', 'Outdoor Space', 'Dining Room', 'High Speed Internet', 'Balcony', 'Swimming Pool']
@@ -61,14 +112,14 @@ for name in facilities:
     test_df = newColumn(name, test_df, test_df['features'])
 #print(train_df.head()
 
-
 #Make attributes from created and photos column
 train_df["created"] = pd.to_datetime(train_df["created"])
 train_df["created_year"] = train_df["created"].dt.year
 train_df["created_month"] = train_df["created"].dt.month
 train_df["created_day"] = train_df["created"].dt.day
 train_df["num_photos"] = train_df["photos"].apply(len)
-#test_df
+
+#Test dataset
 test_df["created"] = pd.to_datetime(test_df["created"])
 test_df["created_year"] = test_df["created"].dt.year
 test_df["created_month"] = test_df["created"].dt.month
@@ -81,6 +132,7 @@ train_df["logprice"] = np.log(train_df["price"])
 train_df["price_t"] =train_df["price"]/train_df["bedrooms"]
 train_df["room_sum"] = train_df["bedrooms"]+train_df["bathrooms"]
 train_df['price_per_room'] = train_df['price']/train_df['room_sum']
+
 #Test dataset
 test_df['price'] = test_df['price'].clip(upper=13000)
 test_df["logprice"] = np.log(test_df["price"])
@@ -93,6 +145,7 @@ train_df['latitude'] = round(train_df['latitude'], 2)
 train_df['longitude'] = round(train_df['longitude'], 2)
 train_df['latlong'] = train_df.latitude.map(str) + ', ' + train_df.longitude.map(str)
 #print(len(train_df['latlong'].unique()))
+
 test_df['latitude'] = round(test_df['latitude'], 2)
 test_df['longitude'] = round(test_df['longitude'], 2)
 test_df['latlong'] = test_df.latitude.map(str) + ', ' + test_df.longitude.map(str)
@@ -114,6 +167,7 @@ for i in range(581):
 #Import csv with zipcodes of unique latitude and longitude. Create id for unique zipcodes
 zipcode = pd.read_csv("neighborhood_new.csv")
 #print(len(zipcode['postal_code'].unique()))
+
 z_id = zipcode['postal_code'].unique()
 z_id = pd.DataFrame(z_id)
 z_id.columns = ['postal_code']
@@ -143,7 +197,7 @@ test_df = pd.merge(test_df, b_id, how = 'left', on=['building_id'])
 test_df = pd.merge(test_df, m_id, how = 'left', on=['manager_id'])
 #print(train_zip.tail())
 
-#Define attributes and dependent variable
+#Define features and target variable
 features_to_use = ["bathrooms", "bedrooms", "price", 'logprice',"room_sum",
              "num_photos", "Elevator", "Dogs Allowed",'Hardwood Floors','Cats Allowed',
              'Dishwasher','Doorman', 'No Fee','Laundry in Building','Fitness Center',
@@ -156,6 +210,7 @@ X = train_df[features_to_use]
 y = np.array(train_df['interest_level'].apply(lambda x: target_num_map[x]))
 
 #Modeling
+
 #Random Forest
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import log_loss
@@ -169,10 +224,9 @@ rf1.fit(X_train, y_train)
 y_val_pred = rf1.predict_proba(X_val)
 y_val_pred_acc = rf1.predict(X_val)
 logloss = log_loss(y_val, y_val_pred)
-print("Random Forest Results:")
-print("The logloss is:", logloss)
+print(logloss)
 accuracy = accuracy_score(y_val, y_val_pred_acc)
-print("The accuracy score is:", accuracy)
+print(accuracy)
 
 #Logistic Regression
 from sklearn.linear_model import LogisticRegression
@@ -181,10 +235,9 @@ rf2.fit(X_train, y_train)
 y_val_pred2 = rf2.predict_proba(X_val)
 y_val_pred_acc2 = rf2.predict(X_val)
 logloss2 = log_loss(y_val, y_val_pred2)
-print("Logistic Regression Results:")
-print("The logloss is:", logloss2)
+print(logloss2)
 accuracy2 = accuracy_score(y_val, y_val_pred_acc2)
-print("The accuracy score is:", accuracy2)
+print(accuracy2)
 
 #Decision tree
 from sklearn.tree import DecisionTreeClassifier
@@ -193,10 +246,9 @@ rf3.fit(X_train, y_train)
 y_val_pred3 = rf3.predict_proba(X_val)
 y_val_pred_acc3 = rf3.predict(X_val)
 logloss3 = log_loss(y_val, y_val_pred3)
-print("Decision Tree Results:")
-print("The logloss is:", logloss3)
+print(logloss3)
 accuracy3 = accuracy_score(y_val, y_val_pred_acc3)
-print("The accuracy score is:", accuracy3)
+print(accuracy3)
 
 #Naive Bayes
 from sklearn.naive_bayes import GaussianNB
@@ -205,10 +257,9 @@ rf4.fit(X_train, y_train)
 y_val_pred4 = rf4.predict_proba(X_val)
 y_val_pred_acc4 = rf4.predict(X_val)
 logloss4 = log_loss(y_val, y_val_pred4)
-print("Naive Bayes Results:")
-print("The logloss is:", logloss4)
+print(logloss4)
 accuracy4 = accuracy_score(y_val, y_val_pred_acc4)
-print("The accuracy score is:", accuracy4)
+print(accuracy4)
 
 #Bagging
 from sklearn.ensemble import BaggingClassifier
@@ -217,10 +268,9 @@ rf5.fit(X_train, y_train)
 y_val_pred5 = rf5.predict_proba(X_val)
 y_val_pred_acc5 = rf5.predict(X_val)
 logloss5 = log_loss(y_val, y_val_pred5)
-print("Bagging Results")
-print("The logloss is:", logloss5)
+print(logloss5)
 accuracy5 = accuracy_score(y_val, y_val_pred_acc5)
-print("The accuracy score is:", accuracy5)
+print(accuracy5)
 
 #KNN
 from sklearn.neighbors import KNeighborsClassifier
@@ -229,10 +279,9 @@ rf6.fit(X_train, y_train)
 y_val_pred6 = rf6.predict_proba(X_val)
 y_val_pred_acc6 = rf6.predict(X_val)
 logloss6 = log_loss(y_val, y_val_pred6)
-print("KNN Results:")
-print("The logloss is:", logloss6)
+print(logloss6)
 accuracy6 = accuracy_score(y_val, y_val_pred_acc6)
-print("The accuracy score is:", accuracy6)
+print(accuracy6)
 
 #AdaBoost
 from sklearn.ensemble import AdaBoostClassifier
@@ -241,12 +290,15 @@ rf7.fit(X_train, y_train)
 y_val_pred7 = rf7.predict_proba(X_val)
 y_val_pred_acc7 = rf7.predict(X_val)
 logloss7 = log_loss(y_val, y_val_pred7)
-print("AdaBoost Results")
-print("The logloss is:", logloss7)
+print(logloss7)
 accuracy7 = accuracy_score(y_val, y_val_pred_acc7)
-print("The accuracy score is:", accuracy7)
+print(accuracy7)
+
+#Evaluation
 
 #Compare different Algorithms
+
+# accuracy score
 import matplotlib.pyplot as plt
 accuracy_list = [accuracy, accuracy2, accuracy3, accuracy4, accuracy5
                  ,accuracy6,accuracy7]
@@ -262,6 +314,7 @@ ax.set_ylim([0.5,0.8])
 ax.set_xticklabels(x_labels)
 plt.show()
 
+#logloss
 import matplotlib.pyplot as plt
 logloss_list = [logloss, logloss2, logloss2, logloss3, logloss4
                  ,logloss6 ,logloss7]
@@ -277,26 +330,14 @@ ax.set_ylim([0,2])
 ax.set_xticklabels(x_labels2)
 plt.show()
 
-
+#Confusion Matrix
 from sklearn.metrics import confusion_matrix
 #RF
-print("Random Forest Confusion Matrix:")
-print(confusion_matrix(y_val, y_val_pred_acc))
+confusion_matrix(y_val, y_val_pred_acc)
 
 from sklearn.metrics import classification_report
 #RF
-print("Random Forest Classification Report:")
 print(classification_report(y_val, y_val_pred_acc))
-
-
-#Using test dataset for submission
-X_test = test_df[features_to_use]
-y_test = rf1.predict_proba(X_test)
-sub = pd.DataFrame()
-sub["listing_id"] = test_df["listing_id"]
-for label in ["high", "medium", "low"]:
-    sub[label] = y_test[:, target_num_map[label]]
-sub.to_csv("submission.csv", index=False)
 
 #Feature Selection
 import matplotlib.pyplot as plt
@@ -323,4 +364,13 @@ plt.xlim([-1, X.shape[1]])
 locs, labels = plt.xticks()
 plt.setp(labels, rotation=90)
 plt.show()
+
+#Using test dataset for submission
+X_test = test_df[features_to_use]
+y_test = rf1.predict_proba(X_test)
+sub = pd.DataFrame()
+sub["listing_id"] = test_df["listing_id"]
+for label in ["high", "medium", "low"]:
+    sub[label] = y_test[:, target_num_map[label]]
+sub.to_csv("submission.csv", index=False)
 
