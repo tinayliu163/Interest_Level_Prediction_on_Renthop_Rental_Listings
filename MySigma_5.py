@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Apr 23 16:35:38 2017
+Created on Wed March 15 16:35:38 2017
 
-@author: Mike
+@author: Christina Eng, Ying Liu, Salman Sigari, Haoyue Yu
 """
 
 import numpy as np
@@ -31,9 +31,8 @@ test_df["bathrooms"].loc[19671] = 1.5
 test_df["bathrooms"].loc[22977] = 2.0
 test_df["bathrooms"].loc[63719] = 2.0
 
-
 #See the frequency of each feature and rank them based on frequency
-'''import collections
+import collections
 def most_common(lst):
     features = collections.Counter(lst)
     feature_value = features.keys()
@@ -41,7 +40,7 @@ def most_common(lst):
     data = [('feature_value', feature_value),
             ('frequency', frequency),]    
     df = pd.DataFrame.from_items(data)
-    return df.sort_values(by = 'frequency', ascending = False)'''
+    return df.sort_values(by = 'frequency', ascending = False)
 
 
 #Function to make a new column for features
@@ -89,8 +88,6 @@ test_df["price_t"] =test_df["price"]/test_df["bedrooms"]
 test_df["room_sum"] = test_df["bedrooms"]+test_df["bathrooms"]
 test_df['price_per_room'] = test_df['price']/test_df['room_sum']
 
-
-
 #Concatenate latitude and longitude into one column
 train_df['latitude'] = round(train_df['latitude'], 2)
 train_df['longitude'] = round(train_df['longitude'], 2)
@@ -101,19 +98,18 @@ test_df['longitude'] = round(test_df['longitude'], 2)
 test_df['latlong'] = test_df.latitude.map(str) + ', ' + test_df.longitude.map(str)
 
 #Obtain zip code from unique latitude and longitude positions
-'''l = pd.concat([train_df['latlong'], test_df['latlong']]).unique()
+l = pd.concat([train_df['latlong'], test_df['latlong']]).unique()
 ll = pd.DataFrame(l)
 #print(len(l))
 l1.to_csv('C:/Users/tingt/PycharmProjects/BIA656/Final/neighborhood_new.csv')
 from geopy.geocoders import Nominatim
 geolocator = Nominatim()
-#location = geolocator.reverse(train_df.iloc[484]['latlong'])
-#location = geolocator.reverse(l[485])
+location = geolocator.reverse(train_df.iloc[484]['latlong'])
+location = geolocator.reverse(l[485])
 #print(location.raw['address')
 for i in range(581):
     location = geolocator.reverse(l[i])
     print(location.raw['address']['postcode'])
-'''
 
 #Import csv with zipcodes of unique latitude and longitude. Create id for unique zipcodes
 zipcode = pd.read_csv("neighborhood_new.csv")
@@ -124,14 +120,12 @@ z_id.columns = ['postal_code']
 z_id['zip_id'] = [i for i in range(len(z_id))]
 zipcode = pd.merge(zipcode, z_id, how = 'left', on = 'postal_code')
 
-
 #Merge zipcode and its id with train and test set
 train_df= pd.merge(train_df, zipcode, how = 'left', on=['latlong'])
 train_df = train_df.drop(['void', 'zip_code_index'], 1)
 test_df = pd.merge(test_df, zipcode, how = 'left', on=['latlong'])
 test_df = test_df.drop(['void', 'zip_code_index'], 1)
 #print(train_df.head())
-
 
 #Create index for unique building and manager ids, then merge with train and test set
 b_id = pd.concat([train_df['building_id'], test_df['building_id']]).unique()
@@ -148,7 +142,6 @@ train_df= pd.merge(train_df, m_id, how = 'left', on=['manager_id'])
 test_df = pd.merge(test_df, b_id, how = 'left', on=['building_id'])
 test_df = pd.merge(test_df, m_id, how = 'left', on=['manager_id'])
 #print(train_zip.tail())
-
 
 #Define attributes and dependent variable
 features_to_use = ["bathrooms", "bedrooms", "price", 'logprice',"room_sum",
@@ -180,7 +173,6 @@ print(logloss)
 accuracy = accuracy_score(y_val, y_val_pred_acc)
 print(accuracy)
 
-
 #Logistic Regression
 from sklearn.linear_model import LogisticRegression
 rf2 = LogisticRegression()
@@ -203,8 +195,6 @@ print(logloss3)
 accuracy3 = accuracy_score(y_val, y_val_pred_acc3)
 print(accuracy3)
 
-
-
 #Naive Bayes
 from sklearn.naive_bayes import GaussianNB
 rf4 = GaussianNB()
@@ -215,7 +205,6 @@ logloss4 = log_loss(y_val, y_val_pred4)
 print(logloss4)
 accuracy4 = accuracy_score(y_val, y_val_pred_acc4)
 print(accuracy4)
-
 
 #Bagging
 from sklearn.ensemble import BaggingClassifier
@@ -250,7 +239,6 @@ print(logloss7)
 accuracy7 = accuracy_score(y_val, y_val_pred_acc7)
 print(accuracy7)
 
-
 #Compare different Algorithms
 import matplotlib.pyplot as plt
 accuracy_list = [accuracy, accuracy2, accuracy3, accuracy4, accuracy5
@@ -266,7 +254,6 @@ ax.set_ylabel("Accuracy score")
 ax.set_ylim([0.5,0.8])
 ax.set_xticklabels(x_labels)
 plt.show()
-
 
 import matplotlib.pyplot as plt
 logloss_list = [logloss, logloss2, logloss2, logloss3, logloss4
@@ -291,12 +278,6 @@ confusion_matrix(y_val, y_val_pred_acc)
 from sklearn.metrics import classification_report
 #RF
 print(classification_report(y_val, y_val_pred_acc))
-
-
-
-
-
-
 
 
 #Using test dataset for submission
