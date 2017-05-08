@@ -169,9 +169,10 @@ rf1.fit(X_train, y_train)
 y_val_pred = rf1.predict_proba(X_val)
 y_val_pred_acc = rf1.predict(X_val)
 logloss = log_loss(y_val, y_val_pred)
-print(logloss)
+print("Random Forest Results:")
+print("The logloss is:", logloss)
 accuracy = accuracy_score(y_val, y_val_pred_acc)
-print(accuracy)
+print("The accuracy score is:", accuracy)
 
 #Logistic Regression
 from sklearn.linear_model import LogisticRegression
@@ -180,9 +181,10 @@ rf2.fit(X_train, y_train)
 y_val_pred2 = rf2.predict_proba(X_val)
 y_val_pred_acc2 = rf2.predict(X_val)
 logloss2 = log_loss(y_val, y_val_pred2)
-print(logloss2)
+print("Logistic Regression Results:")
+print("The logloss is:", logloss2)
 accuracy2 = accuracy_score(y_val, y_val_pred_acc2)
-print(accuracy2)
+print("The accuracy score is:", accuracy2)
 
 #Decision tree
 from sklearn.tree import DecisionTreeClassifier
@@ -191,9 +193,10 @@ rf3.fit(X_train, y_train)
 y_val_pred3 = rf3.predict_proba(X_val)
 y_val_pred_acc3 = rf3.predict(X_val)
 logloss3 = log_loss(y_val, y_val_pred3)
-print(logloss3)
+print("Decision Tree Results:")
+print("The logloss is:", logloss3)
 accuracy3 = accuracy_score(y_val, y_val_pred_acc3)
-print(accuracy3)
+print("The accuracy score is:", accuracy3)
 
 #Naive Bayes
 from sklearn.naive_bayes import GaussianNB
@@ -202,9 +205,10 @@ rf4.fit(X_train, y_train)
 y_val_pred4 = rf4.predict_proba(X_val)
 y_val_pred_acc4 = rf4.predict(X_val)
 logloss4 = log_loss(y_val, y_val_pred4)
-print(logloss4)
+print("Naive Bayes Results:")
+print("The logloss is:", logloss4)
 accuracy4 = accuracy_score(y_val, y_val_pred_acc4)
-print(accuracy4)
+print("The accuracy score is:", accuracy4)
 
 #Bagging
 from sklearn.ensemble import BaggingClassifier
@@ -213,9 +217,10 @@ rf5.fit(X_train, y_train)
 y_val_pred5 = rf5.predict_proba(X_val)
 y_val_pred_acc5 = rf5.predict(X_val)
 logloss5 = log_loss(y_val, y_val_pred5)
-print(logloss5)
+print("Bagging Results")
+print("The logloss is:", logloss5)
 accuracy5 = accuracy_score(y_val, y_val_pred_acc5)
-print(accuracy5)
+print("The accuracy score is:", accuracy5)
 
 #KNN
 from sklearn.neighbors import KNeighborsClassifier
@@ -224,9 +229,10 @@ rf6.fit(X_train, y_train)
 y_val_pred6 = rf6.predict_proba(X_val)
 y_val_pred_acc6 = rf6.predict(X_val)
 logloss6 = log_loss(y_val, y_val_pred6)
-print(logloss6)
+print("KNN Results:")
+print("The logloss is:", logloss6)
 accuracy6 = accuracy_score(y_val, y_val_pred_acc6)
-print(accuracy6)
+print("The accuracy score is:", accuracy6)
 
 #AdaBoost
 from sklearn.ensemble import AdaBoostClassifier
@@ -235,9 +241,10 @@ rf7.fit(X_train, y_train)
 y_val_pred7 = rf7.predict_proba(X_val)
 y_val_pred_acc7 = rf7.predict(X_val)
 logloss7 = log_loss(y_val, y_val_pred7)
-print(logloss7)
+print("AdaBoost Results")
+print("The logloss is:", logloss7)
 accuracy7 = accuracy_score(y_val, y_val_pred_acc7)
-print(accuracy7)
+print("The accuracy score is:", accuracy7)
 
 #Compare different Algorithms
 import matplotlib.pyplot as plt
@@ -273,10 +280,12 @@ plt.show()
 
 from sklearn.metrics import confusion_matrix
 #RF
-confusion_matrix(y_val, y_val_pred_acc)
+print("Random Forest Confusion Matrix:")
+print(confusion_matrix(y_val, y_val_pred_acc))
 
 from sklearn.metrics import classification_report
 #RF
+print("Random Forest Classification Report:")
 print(classification_report(y_val, y_val_pred_acc))
 
 
