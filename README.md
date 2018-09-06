@@ -1,2 +1,14 @@
-# Two-sigma-connect-Rental-Listing-Inquiries
-This is a kaggle competition. The objective of this project is to predict how popular an apartment rental listing is based on the listing content like text description, photos, number of bedrooms, price, etc. Our workflow is made up of a few parts: 1. Data understanding &amp; Data Cleaning like dealing with missing values ; 2. Feature selection ; 3. Modeling; 4. Modeling evaluation 
+# Interest_Level_Prediction_on_Renthop_Rental_Listings
+This is a kaggle competition.
+
+# objective
+predict how popular an apartment rental listing is based on the listing content like text description, photos, number of bedrooms, price, etc. 
+
+# Workflow
+
+- Data understanding 
+- Data Cleaning
+- Exploratory Data Analysis
+- Feature Engineering and selection 
+- Modeling
+- Modeling evaluation 
